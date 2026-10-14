@@ -32,6 +32,8 @@ const jobRoutes = require('./routes/job.routes');
 const applicationRoutes = require('./routes/application.routes');
 const courseRoutes = require('./routes/course.routes');
 const notificationRoutes = require('./routes/notification.routes');
+const recruiterRoutes = require('./routes/recruiter.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
@@ -41,6 +43,8 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/recruiter', recruiterRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Role Test Protected Routes for Authorization Verification
 app.get('/api/test/student-only', protect, authorize('student'), (req, res) => {

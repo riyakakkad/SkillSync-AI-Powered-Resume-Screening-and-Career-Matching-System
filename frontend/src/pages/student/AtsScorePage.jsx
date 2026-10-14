@@ -137,6 +137,11 @@ export default function AtsScorePage() {
                 Evaluated from document structure, technical keywords, skills coverage, and section completeness.
               </p>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {(selectedResume?.detectedDomain || atsBreakdown?.detectedDomain) && (
+                  <span style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '6px', background: 'rgba(99, 102, 241, 0.2)', border: '1px solid rgba(99, 102, 241, 0.4)', color: '#c7d2fe', fontWeight: 600 }}>
+                    Domain: <strong>{selectedResume?.detectedDomain || atsBreakdown?.detectedDomain}</strong>
+                  </span>
+                )}
                 <span style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#fff' }}>
                   Extracted Skills: <strong>{detectedSkills.length}</strong>
                 </span>

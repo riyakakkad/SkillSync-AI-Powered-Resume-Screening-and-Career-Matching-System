@@ -24,8 +24,19 @@ import NotificationsPage from './pages/student/NotificationsPage';
 import StudentProfilePage from './pages/student/StudentProfilePage';
 import StudentSettingsPage from './pages/student/StudentSettingsPage';
 
-import RecruiterDashboardPlaceholder from './pages/recruiter/RecruiterDashboardPlaceholder';
-import AdminDashboardPlaceholder from './pages/admin/AdminDashboardPlaceholder';
+import RecruiterLayout from './layouts/RecruiterLayout';
+import RecruiterDashboardPage from './pages/recruiter/RecruiterDashboardPage';
+import RecruiterJobsPage from './pages/recruiter/RecruiterJobsPage';
+import RecruiterJobFormPage from './pages/recruiter/RecruiterJobFormPage';
+import RecruiterApplicationsPage from './pages/recruiter/RecruiterApplicationsPage';
+import RecruiterApplicantDetailPage from './pages/recruiter/RecruiterApplicantDetailPage';
+
+import AdminLayout from './layouts/AdminLayout';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminJobsPage from './pages/admin/AdminJobsPage';
+import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
+import AdminLogsPage from './pages/admin/AdminLogsPage';
 
 export default function App() {
   return (
@@ -72,10 +83,17 @@ export default function App() {
               path="/recruiter/*"
               element={
                 <ProtectedRoute allowedRoles={['recruiter']}>
-                  <Routes>
-                    <Route path="dashboard" element={<RecruiterDashboardPlaceholder />} />
-                    <Route path="*" element={<RecruiterDashboardPlaceholder />} />
-                  </Routes>
+                  <RecruiterLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<RecruiterDashboardPage />} />
+                      <Route path="jobs" element={<RecruiterJobsPage />} />
+                      <Route path="jobs/new" element={<RecruiterJobFormPage />} />
+                      <Route path="jobs/:id/edit" element={<RecruiterJobFormPage />} />
+                      <Route path="applications" element={<RecruiterApplicationsPage />} />
+                      <Route path="applications/:id" element={<RecruiterApplicantDetailPage />} />
+                      <Route path="*" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </RecruiterLayout>
                 </ProtectedRoute>
               }
             />
@@ -85,10 +103,16 @@ export default function App() {
               path="/admin/*"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <Routes>
-                    <Route path="dashboard" element={<AdminDashboardPlaceholder />} />
-                    <Route path="*" element={<AdminDashboardPlaceholder />} />
-                  </Routes>
+                  <AdminLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<AdminDashboardPage />} />
+                      <Route path="users" element={<AdminUsersPage />} />
+                      <Route path="jobs" element={<AdminJobsPage />} />
+                      <Route path="applications" element={<AdminApplicationsPage />} />
+                      <Route path="logs" element={<AdminLogsPage />} />
+                      <Route path="*" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </AdminLayout>
                 </ProtectedRoute>
               }
             />

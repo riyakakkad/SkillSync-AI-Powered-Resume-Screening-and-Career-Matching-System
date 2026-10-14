@@ -19,15 +19,16 @@ export default function StudentDashboardPage() {
   const [applications, setApplications] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [candidateProfile, setCandidateProfile] = useState({ domain: 'General', topMatch: null });
 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [resumesRes, appsRes, jobsRes, notifsRes] = await Promise.allSettled([
+      const [resumesRes, appsRes, recsRes, notifsRes] = await Promise.allSettled([
         axios.get(`${API_BASE_URL}/resumes`),
         axios.get(`${API_BASE_URL}/applications`),
-        axios.get(`${API_BASE_URL}/jobs`),
+        axios.get(`${API_BASE_URL}/jobs/recommendations`),
         axios.get(`${API_BASE_URL}/notifications`)
       ]);
 
@@ -37,8 +38,22 @@ export default function StudentDashboardPage() {
       if (appsRes.status === 'fulfilled' && appsRes.value.data.success) {
         setApplications(appsRes.value.data.applications || []);
       }
-      if (jobsRes.status === 'fulfilled' && jobsRes.value.data.success) {
-        setJobs(jobsRes.value.data.jobs || []);
+      if (recsRes.status === 'fulfilled' && recsRes.value.data.success) {
+        const fetchedJobs = recsRes.value.data.jobs || [];
+        setJobs(fetchedJobs);
+        const topScore = fetchedJobs.length > 0 && typeof fetchedJobs[0].matchScore === 'number'
+          ? fetchedJobs[0].matchScore
+          : null;
+        setCandidateProfile({
+          domain: recsRes.value.data.candidateDomain || 'General',
+          topMatch: topScore
+        });
+      } else {
+        // Fallback to basic /jobs
+        const fallbackRes = await axios.get(`${API_BASE_URL}/jobs`);
+        if (fallbackRes.data.success) {
+          setJobs(fallbackRes.data.jobs || []);
+        }
       }
       if (notifsRes.status === 'fulfilled' && notifsRes.value.data.success) {
         setNotifications(notifsRes.value.data.notifications || []);
@@ -92,6 +107,7 @@ export default function StudentDashboardPage() {
   }
 
   const latestResume = resumes.length > 0 ? resumes[0] : null;
+  const isAnalyzed = latestResume && latestResume.status === 'analyzed';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -103,30 +119,33 @@ export default function StudentDashboardPage() {
           borderColor: 'rgba(99, 102, 241, 0.3)',
           padding: '1.75rem 2rem',
           display: 'flex',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem'
         }}
       >
         <div>
-          <span className="badge badge-pending" style={{ marginBottom: '0.5rem' }}>
-            Phase 3 Functional Module
+          <span className="badge badge-success" style={{ marginBottom: '0.5rem' }}>
+            Phase 5 AI Engine Active
           </span>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
             Welcome back to SkillSync! 🚀
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', maxWidth: '600px' }}>
-            Upload your resume, track job applications, discover recommended courses, and prepare your profile for AI-driven skill matching in Phase 4.
+            Discover AI-matched jobs across 9 professional domains, analyze prioritized skill gaps, and explore targeted courses to advance your career.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <button onClick={() => navigate('/student/resume-upload')} className="btn btn-primary">
             📤 Upload Resume
           </button>
           <button onClick={() => navigate('/student/job-matching')} className="btn" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff' }}>
-            ⚡ Explore Jobs
+            ⚡ AI Job Matches
+          </button>
+          <button onClick={() => navigate('/student/skill-gaps')} className="btn" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff' }}>
+            📊 Skill Gaps
           </button>
         </div>
       </div>
@@ -135,24 +154,24 @@ export default function StudentDashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
         <MetricCard
           title="ATS Score"
-          value={latestResume ? 'Pending AI' : 'No Resume'}
-          subtitle="Phase 4 AI Calculation"
+          value={isAnalyzed ? `${latestResume.atsScore || 0}%` : (latestResume ? 'Pending' : 'No Resume')}
+          subtitle={isAnalyzed ? `Domain: ${latestResume.detectedDomain || 'General'}` : 'Upload & Analyze Resume'}
           icon="🎯"
-          color="indigo"
+          color={isAnalyzed ? (latestResume.atsScore >= 70 ? 'emerald' : 'amber') : 'indigo'}
         />
 
         <MetricCard
           title="Resume Status"
-          value={latestResume ? 'Uploaded' : 'Missing'}
+          value={isAnalyzed ? 'Analyzed' : (latestResume ? 'Uploaded' : 'Missing')}
           subtitle={latestResume ? latestResume.originalName : 'Upload PDF / DOCX'}
           icon="📄"
-          color={latestResume ? 'emerald' : 'amber'}
+          color={isAnalyzed ? 'emerald' : (latestResume ? 'cyan' : 'amber')}
         />
 
         <MetricCard
-          title="Job Match %"
-          value="Pending"
-          subtitle="Phase 5 Matching Engine"
+          title="Top Job Match"
+          value={candidateProfile.topMatch !== null ? `${candidateProfile.topMatch}%` : (jobs.length > 0 ? 'Ready' : 'N/A')}
+          subtitle={candidateProfile.topMatch !== null ? `Profile: ${candidateProfile.domain}` : 'TF-IDF AI Matching'}
           icon="⚡"
           color="cyan"
         />
@@ -172,19 +191,19 @@ export default function StudentDashboardPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
-              Featured Opportunities
+              Top AI Matched Opportunities
             </h3>
             <button
               onClick={() => navigate('/student/job-matching')}
               style={{ background: 'none', border: 'none', color: 'var(--cyan-accent)', fontWeight: 600, cursor: 'pointer', fontSize: '0.875rem' }}
             >
-              View All Jobs →
+              View All {jobs.length} Jobs →
             </button>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
             {jobs.slice(0, 4).map((job) => {
-              const isApplied = applications.some((app) => app.job?._id === job._id || app.job === job._id);
+              const isApplied = applications.some((app) => (app.job?._id || app.job) === job._id);
               return (
                 <JobCard
                   key={job._id}
@@ -203,11 +222,33 @@ export default function StudentDashboardPage() {
         {/* Right Column - Status & Activity */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <ScoreCard
-            title="AI Resume Analysis Status"
-            score={0}
-            isPending={true}
-            statusText="AI parsing will trigger in Phase 4"
+            title="Resume ATS Score"
+            score={latestResume?.atsScore || 0}
+            isPending={!isAnalyzed}
+            statusText={isAnalyzed ? `Adaptive domain: ${latestResume.detectedDomain}` : 'Analyze resume in Resume Analysis'}
           />
+
+          {/* Skill Gap Quick Card */}
+          <div className="card" style={{ background: 'rgba(30, 41, 59, 0.7)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                Domain Skill Gaps
+              </h3>
+              <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>
+                AI Analysis Active
+              </span>
+            </div>
+            <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
+              Compare your current verified profile against {candidateProfile.domain} industry role benchmarks.
+            </p>
+            <button
+              onClick={() => navigate('/student/skill-gaps')}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '0.45rem', fontSize: '0.85rem' }}
+            >
+              View Skill Gap Breakdown →
+            </button>
+          </div>
 
           {/* Recent Activity */}
           <div className="card">
@@ -229,28 +270,6 @@ export default function StudentDashboardPage() {
                 No recent activity logged yet.
               </div>
             )}
-          </div>
-
-          {/* Skill Gap Summary */}
-          <div className="card" style={{ background: 'rgba(17, 24, 39, 0.5)' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
-              Skill Gap Summary
-            </h3>
-            <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
-              SkillSync will automatically compare your profile against target industry roles once resume parsing is active.
-            </p>
-            <div
-              style={{
-                fontSize: '0.8rem',
-                padding: '0.6rem 0.85rem',
-                borderRadius: '8px',
-                background: 'rgba(245, 158, 11, 0.1)',
-                border: '1px solid rgba(245, 158, 11, 0.25)',
-                color: '#fbbf24'
-              }}
-            >
-              ℹ️ Reserved for Phase 4 AI Pipeline
-            </div>
           </div>
         </div>
       </div>

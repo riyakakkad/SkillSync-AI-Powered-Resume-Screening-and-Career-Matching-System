@@ -34,9 +34,11 @@ export default function ApplicationsPage() {
 
   const getStatusBadge = (status) => {
     switch (status) {
+      case 'Hired':
       case 'Selected':
       case 'Shortlisted':
         return <span className="badge badge-success">✓ {status}</span>;
+      case 'Interview':
       case 'Interview Scheduled':
         return <span className="badge badge-pending">📅 {status}</span>;
       case 'Under Review':

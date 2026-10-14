@@ -2,24 +2,54 @@ import re
 
 class SectionExtractor:
     SECTION_HEADERS = {
-        "summary": ["summary", "profile", "about me", "objective", "professional summary", "overview"],
-        "skills": ["skills", "technical skills", "technologies", "core competencies", "tools", "skills & tools"],
-        "education": ["education", "academic background", "qualifications", "education & training", "academic history"],
-        "experience": ["experience", "work experience", "employment history", "work history", "professional experience", "internships"],
-        "projects": ["projects", "personal projects", "academic projects", "key projects", "technical projects"],
-        "certifications": ["certifications", "licenses", "courses", "certificates", "credentials"],
-        "achievements": ["achievements", "awards", "honors", "accomplishments", "publications"]
+        "summary": [
+            "summary", "profile", "about me", "objective", "professional summary",
+            "career objective", "executive summary", "overview", "professional profile", "career summary"
+        ],
+        "skills": [
+            "skills", "technical skills", "technologies", "core competencies",
+            "competencies", "areas of expertise", "key skills", "professional skills",
+            "clinical skills", "technical & clinical skills", "functional skills",
+            "tools", "skills & tools", "specialties", "technical proficiencies",
+            "key strengths", "core strengths", "expertise"
+        ],
+        "education": [
+            "education", "academic background", "qualifications", "education & training",
+            "academic history", "educational qualifications", "degrees & credentials", "educational background"
+        ],
+        "experience": [
+            "experience", "work experience", "employment history", "work history",
+            "professional experience", "internships", "clinical experience", "clinical rotations",
+            "residency", "teaching experience", "teaching history", "audit experience",
+            "accounting experience", "field experience", "practical experience", "work background"
+        ],
+        "projects": [
+            "projects", "personal projects", "academic projects", "key projects",
+            "technical projects", "case studies", "campaigns", "portfolio",
+            "research & publications", "selected transactions", "design projects",
+            "consulting projects", "key engagements"
+        ],
+        "certifications": [
+            "certifications", "licenses", "licensure", "courses", "certificates",
+            "credentials", "board certifications", "professional certifications",
+            "accreditations", "licensure & certifications"
+        ],
+        "achievements": [
+            "achievements", "awards", "honors", "accomplishments", "publications",
+            "honours & awards", "patents", "recognitions"
+        ]
     }
 
     @classmethod
     def extract_sections(cls, text: str) -> dict:
-        """Parse clean text into structured resume sections."""
+        """Parse clean text into structured resume sections across multiple professional domains."""
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         
         sections = {
             "contact": cls._extract_contact_info(text, lines),
             "summary": "",
             "skills": [],
+            "rawSkillsText": "",
             "education": [],
             "experience": [],
             "projects": [],
@@ -36,7 +66,12 @@ class SectionExtractor:
             # Check if line matches a section header
             matched_section = None
             for sec_name, keywords in cls.SECTION_HEADERS.items():
-                if normalized_line in keywords or any(normalized_line.startswith(kw + ":") for kw in keywords):
+                if (
+                    normalized_line in keywords
+                    or any(normalized_line.startswith(kw + ":") for kw in keywords)
+                    or any(normalized_line.startswith(kw + " -") for kw in keywords)
+                    or any(normalized_line == kw.replace('&', 'and') for kw in keywords)
+                ):
                     matched_section = sec_name
                     break
             
@@ -50,6 +85,10 @@ class SectionExtractor:
         # Process summary
         if section_lines["summary"]:
             sections["summary"] = " ".join(section_lines["summary"])
+
+        # Capture raw text of skills section for dynamic extraction
+        if section_lines["skills"]:
+            sections["rawSkillsText"] = "\n".join(section_lines["skills"])
 
         # Process structured list sections
         sections["education"] = cls._parse_list_section(section_lines["education"])

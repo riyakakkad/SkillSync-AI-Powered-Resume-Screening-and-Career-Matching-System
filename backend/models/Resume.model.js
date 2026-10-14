@@ -67,6 +67,23 @@ const ResumeSchema = new mongoose.Schema(
     analysisError: {
       type: String,
       default: ''
+    },
+    // Multi-Domain Resume Analysis Metadata
+    detectedDomain: {
+      type: String,
+      default: 'Unknown'
+    },
+    relevantDomains: [{
+      type: String
+    }],
+    domainConfidence: {
+      type: Number,
+      default: 0
+    },
+    // Phase 5 Skill Gap Analysis Cache
+    skillGaps: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
     }
   },
   {

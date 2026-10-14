@@ -8,7 +8,11 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname.startsWith('/student')) {
+  if (
+    location.pathname.startsWith('/student') ||
+    location.pathname.startsWith('/recruiter') ||
+    location.pathname.startsWith('/admin')
+  ) {
     return null;
   }
 

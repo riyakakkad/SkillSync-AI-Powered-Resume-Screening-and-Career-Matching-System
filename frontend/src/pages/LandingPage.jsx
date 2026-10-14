@@ -41,16 +41,53 @@ export default function LandingPage() {
       <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.2)', padding: '0.4rem 1rem', borderRadius: '9999px', marginBottom: '1.5rem', color: '#a5b4fc', fontSize: '0.875rem' }}>
           <Sparkles size={16} />
-          <span>Semester Group Project — Phase 1 Foundation</span>
+          <span>SkillSync Multi-Domain Resume Screening & Career Matching System</span>
         </div>
 
         <h1 style={{ fontSize: '3.25rem', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: '1rem' }}>
           Welcome to <span className="gradient-text">SkillSync</span>
         </h1>
 
-        <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', fontWeight: 500, lineHeight: 1.6 }}>
-          AI-Powered Resume Screening & Career Matching System
+        <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', fontWeight: 500, lineHeight: 1.6, marginBottom: '1.5rem' }}>
+          AI-Powered Resume Screening, Domain Skill Extraction, Career Matching & Recruitment Oversight
         </p>
+
+        {/* Portal Quick Links */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <a
+            href="/login"
+            className="btn btn-primary"
+            style={{ padding: '0.65rem 1.5rem', fontSize: '0.95rem' }}
+          >
+            🎓 Student Portal
+          </a>
+          <a
+            href="/login"
+            className="btn"
+            style={{
+              padding: '0.65rem 1.5rem',
+              fontSize: '0.95rem',
+              background: 'rgba(6, 182, 212, 0.15)',
+              border: '1px solid rgba(6, 182, 212, 0.35)',
+              color: '#38bdf8'
+            }}
+          >
+            💼 Recruiter Portal
+          </a>
+          <a
+            href="/login"
+            className="btn"
+            style={{
+              padding: '0.65rem 1.5rem',
+              fontSize: '0.95rem',
+              background: 'rgba(236, 72, 153, 0.15)',
+              border: '1px solid rgba(236, 72, 153, 0.35)',
+              color: '#f472b6'
+            }}
+          >
+            ⚙️ Admin Panel
+          </a>
+        </div>
       </div>
 
       {/* Connectivity Status Grid */}

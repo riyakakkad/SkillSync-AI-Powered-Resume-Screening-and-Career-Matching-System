@@ -3,7 +3,17 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const extractError = (error, fallback) => {
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  }
+  if (error.response?.status === 404) {
+    return 'Authentication service not reachable (404). Please verify backend connection.';
+  }
+  return error.message || fallback;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -61,7 +71,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: userData };
       }
     } catch (error) {
-      const msg = error.response?.data?.message || 'Login failed. Please check credentials.';
+      const msg = extractError(error, 'Login failed. Please check credentials.');
       setAuthError(msg);
       return { success: false, error: msg };
     }
@@ -89,7 +99,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: userData };
       }
     } catch (error) {
-      const msg = error.response?.data?.message || 'Registration failed. Please check your details.';
+      const msg = extractError(error, 'Registration failed. Please check your details.');
       setAuthError(msg);
       return { success: false, error: msg };
     }
@@ -112,7 +122,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(`${API_BASE_URL}/auth/forgot-password`, { email });
       return { success: true, data: response.data };
     } catch (error) {
-      const msg = error.response?.data?.message || 'Failed to request password reset.';
+      const msg = extractError(error, 'Failed to request password reset.');
       setAuthError(msg);
       return { success: false, error: msg };
     }
@@ -138,7 +148,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: userData };
       }
     } catch (error) {
-      const msg = error.response?.data?.message || 'Failed to reset password.';
+      const msg = extractError(error, 'Failed to reset password.');
       setAuthError(msg);
       return { success: false, error: msg };
     }

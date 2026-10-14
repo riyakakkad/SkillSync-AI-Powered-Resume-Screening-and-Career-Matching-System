@@ -134,7 +134,73 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+        {/* Demo Quick-Fill Roles */}
+        <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.65rem' }}>
+            Quick Demo Credentials
+          </span>
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('admin@skillsync.com');
+                setPassword('Admin@123456');
+              }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                background: 'rgba(236, 72, 153, 0.15)',
+                border: '1px solid rgba(236, 72, 153, 0.3)',
+                color: '#f472b6',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              ⚙️ Admin Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('recruiter.demo@skillsync.com');
+                setPassword('Password123!');
+              }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                background: 'rgba(6, 182, 212, 0.15)',
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                color: '#38bdf8',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              💼 Recruiter Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('student.demo@skillsync.com');
+                setPassword('Password123!');
+              }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                background: 'rgba(99, 102, 241, 0.15)',
+                border: '1px solid rgba(99, 102, 241, 0.3)',
+                color: '#a5b4fc',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              🎓 Student Demo
+            </button>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Don't have an account?{' '}
           <Link to="/register" style={{ color: 'var(--primary-accent)', fontWeight: 600, textDecoration: 'none' }}>
             Register Now

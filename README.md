@@ -1,397 +1,436 @@
 # SkillSync — AI-Powered Resume Screening & Career Matching System
 
-SkillSync is a full-stack platform designed to streamline student resume screening, ATS scoring, skill gap analysis, course recommendations, and job matching using AI/ML capabilities.
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-68A063.svg?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=black)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0+-47A248.svg?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Vite](https://img.shields.io/badge/Vite-5.0+-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Status](https://img.shields.io/badge/Phase%201--8-Production%20Ready-success.svg)]()
+
+SkillSync is an enterprise-grade, full-stack AI platform designed for multi-domain resume screening, explainable ATS scoring, candidate-job matching, skill gap analysis, targeted course recommendations, recruiter talent pipelines, and administrative governance.
+
+---
+
+## 📑 Table of Contents
+1. [Project Overview](#-1-project-overview)
+2. [Multi-Domain Architecture & Intelligence](#-2-multi-domain-architecture--intelligence)
+3. [System Architecture](#-3-system-architecture)
+4. [Directory Layout](#-4-directory-layout)
+5. [Summary of Implemented Modules (Phases 1–8)](#-5-summary-of-implemented-modules-phases-18)
+6. [Prerequisites & Environment Configuration](#-6-prerequisites--environment-configuration)
+7. [Installation & Getting Started](#-7-installation--getting-started)
+8. [Demo Walkthrough & Pre-seeded Accounts](#-8-demo-walkthrough--pre-seeded-accounts)
+9. [Complete API Catalog](#-9-complete-api-catalog)
+10. [Automated Test Suites & Quality Assurance](#-10-automated-test-suites--quality-assurance)
+11. [Known Limitations](#-11-known-limitations)
 
 ---
 
 ## 📋 1. Project Overview
 
-SkillSync is an intelligent, end-to-end career guidance and resume evaluation ecosystem. It enables students to upload technical resumes in standard formats (PDF, DOCX), receive automated NLP-driven section parsing and skill extraction, get explainable ATS candidate scores, discover missing skill gaps, explore targeted course recommendations, and manage job applications. The application enforces role-based access control for Students, Recruiters, and Admins across a decoupled modern architecture.
+SkillSync eliminates the traditional limitations of recruitment platforms that cater exclusively to software engineering. Using a modular multi-tier architecture, SkillSync delivers:
+
+- **Universal Multi-Domain Support**: Intelligent parsing and skill extraction for candidates across 10 professional domains (IT, Data Science, Healthcare, Finance, Marketing, HR, Education, Engineering, Business, and Cross-Disciplinary fields).
+- **Explainable ATS Scoring**: Transparent candidate scoring breakdown across skills match, formatting, experience depth, and readability.
+- **Smart Job Matching & Skill Gap Analysis**: Real-time comparison between candidate competencies and job descriptions, computing match percentages, matched skills, missing skills, and dynamic course recommendations.
+- **Role-Based Workspaces**:
+  - **Student Portal**: Resume management, ATS score reports, personalized job matching, skill gap insights, and application tracking.
+  - **Recruiter Portal**: Job listing management, applicant ranking, candidate match breakdown, and application stage progression.
+  - **Admin Control Center**: Platform analytics, user directory management, job moderation, application monitoring, and immutable system audit logging.
 
 ---
 
-## 🏗️ 2. Project Architecture
+## 🧠 2. Multi-Domain Architecture & Intelligence
 
-SkillSync follows a modern decoupled 3-tier microservice architecture:
+SkillSync's ML engine features a high-precision taxonomy spanning **10 distinct industry domains**:
 
-```
-SkillSync/
-├── frontend/       # React + Vite Single Page Application (UI Layer)
-├── backend/        # Node.js + Express REST API Server + MongoDB Mongoose (API & DB Layer)
-└── ml-service/     # Python + FastAPI AI/ML Microservice (Intelligence & NLP Layer)
-```
+1. **IT and Software Development** (React, Node.js, Python, TypeScript, Docker, Kubernetes, AWS, Java, etc.)
+2. **Data Science and Data Analytics** (Machine Learning, Pandas, Scikit-Learn, PowerBI, Tableau, Deep Learning, etc.)
+3. **Healthcare & Medicine** (Patient Care, EHR, Clinical Research, HIPAA Compliance, Nursing, Pharmacology, etc.)
+4. **Finance and Accounting** (Financial Modeling, Valuation, Auditing, GAAP, Tax Preparation, Quickbooks, etc.)
+5. **Marketing & Growth** (SEO, Content Strategy, Google Analytics, Social Media Marketing, PPC, Brand Strategy, etc.)
+6. **Human Resources** (Talent Acquisition, Employee Relations, Onboarding, Performance Management, HRIS, etc.)
+7. **Education & Teaching** (Curriculum Development, Classroom Management, Lesson Planning, Instructional Design, etc.)
+8. **Engineering (Mechanical, Civil, Electrical)** (AutoCAD, SolidWorks, MATLAB, Circuit Design, Structural Analysis, etc.)
+9. **Business & Management** (Strategic Planning, Project Management, Agile/Scrum, Operations, Stakeholder Management, etc.)
+10. **Cross-Disciplinary & Multi-Domain Profiles** (Adaptive domain identification with confidence scoring).
 
-- **Frontend Tier**: Single Page Application built with React 18, Vite, React Router DOM, and Tailwind CSS.
-- **Backend Tier**: Express.js REST API server handling authentication, user profiles, document storage, and application business logic connected to MongoDB via Mongoose.
-- **ML Microservice Tier**: FastAPI microservice performing document text parsing (PDF/DOCX), NLP text preprocessing, regex-based skill extraction, and explainable ATS scoring.
+The ML microservice dynamically calculates:
+$$\text{Domain Confidence} = \frac{\text{Skills Matching Domain}}{\text{Total Detected Skills}}$$
+Candidates are matched only against domain-relevant jobs without arbitrary pigeonholing into IT roles.
 
 ---
 
-## ⚙️ 3. PHASE 1 — Project Foundation
+## 🏗️ 3. System Architecture
 
-Phase 1 established the core project infrastructure, microservice layout, environment configurations, and health check endpoints.
-
-### Implemented Architecture
-- **React + Vite Frontend**: Initialized SPA structure with development server on port `5173`.
-- **Node.js + Express Backend**: Configured API server running on port `5000` with CORS, JSON body parsing, and static file serving (`/uploads`).
-- **MongoDB + Mongoose**: Database integration establishing connection to `mongodb://127.0.0.1:27017/skillsync`.
-- **Python + FastAPI ML Service**: AI microservice using Uvicorn ASGI server on port `8000`.
-
-### Environment Configuration (`.env`)
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/skillsync
-ML_SERVICE_URL=http://localhost:8000
-NODE_ENV=development
-JWT_SECRET=skillsync_super_secret_jwt_key_2026_change_in_production
-JWT_EXPIRES_IN=7d
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SkillSync Frontend                       │
+│           (React 18 + Vite + Tailwind CSS SPA)              │
+│       Student Portal  │  Recruiter Portal  │ Admin Portal   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ HTTP / REST / Bearer JWT
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SkillSync Backend API                    │
+│            (Node.js + Express REST API Server)              │
+│  Controllers │ Auth/RBAC │ Audit Logger │ ML Client Proxy   │
+└──────────────┬──────────────────────────────┬───────────────┘
+               │                              │ HTTP Internal
+               ▼                              ▼
+┌─────────────────────────────┐  ┌─────────────────────────────┐
+│       MongoDB Server        │  │     Python ML Service       │
+│  (Users, Resumes, Jobs,     │  │    (FastAPI + Uvicorn)      │
+│   Applications, AuditLogs)  │  │  PDF/DOCX Extraction, NLP,  │
+│                             │  │  Multi-Domain Engine, ATS   │
+└─────────────────────────────┘  └─────────────────────────────┘
 ```
 
-### Service Ports & Health Check Endpoints
-- **Frontend**: `http://localhost:5173` (Route: `/`)
-- **Backend API**: `http://localhost:5000` (Health Check: `GET /api/health`)
-- **Python ML Service**: `http://localhost:8000` (Health Check: `GET /health`)
-- **MongoDB Database**: `mongodb://127.0.0.1:27017/skillsync` (Port `27017`)
+- **Frontend**: Port `5173` — Responsive, glassmorphic UI with quick demo login chips.
+- **Backend API**: Port `5000` — Central orchestrator, RBAC enforcement, file uploads, Mongoose models.
+- **Python ML Microservice**: Port `8000` — Asynchronous text extraction (`pdfplumber`, `python-docx`), regex-driven taxonomy matching, and algorithmic ATS scoring.
+- **MongoDB**: Port `27017` — Persistent storage with referential integrity.
 
-### Initial Project Directory Structure
+---
+
+## 📂 4. Directory Layout
+
 ```
 SkillSync/
-├── backend/
-│   ├── config/          # Database connection settings
-│   ├── controllers/     # API request controllers
-│   ├── middleware/      # Auth & RBAC middlewares
-│   ├── models/          # Mongoose data models
-│   ├── routes/          # Express route definitions
-│   ├── services/        # External service connectors (ML service integration)
-│   ├── uploads/         # Local resume file storage
-│   ├── utils/           # Test suites and seed scripts
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-├── frontend/
+├── frontend/                   # React Single Page Application
 │   ├── src/
-│   │   ├── components/  # Navigation, Layout, and UI components
-│   │   ├── context/     # Auth Context provider
-│   │   ├── pages/       # Auth, Student, Recruiter, Admin pages
-│   │   ├── services/    # Axios API client instances
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   ├── components/         # Reusable UI (Navbar, Footer, Modal, ProtectedRoute, etc.)
+│   │   ├── context/            # AuthContext (state, JWT persistence, roles)
+│   │   ├── pages/
+│   │   │   ├── admin/          # Admin Dashboard, User Management, Job Moderation, Logs
+│   │   │   ├── recruiter/      # Recruiter Dashboard, Job Creation, Applicant Review
+│   │   │   ├── student/        # Student Dashboard, Resume Upload, ATS Report, Job Matches
+│   │   │   ├── auth/           # Login, Register, Forgot/Reset Password
+│   │   │   └── LandingPage.jsx # Public landing page with role portals
+│   │   ├── services/           # Axios service instances (api, auth, student, recruiter, admin)
+│   │   └── App.jsx             # React Router routing & RBAC route gates
 │   └── package.json
-└── ml-service/
+│
+├── backend/                    # Node.js + Express API
+│   ├── config/                 # Database configuration (db.js)
+│   ├── controllers/            # Controller business logic (auth, student, recruiter, admin, job)
+│   ├── middleware/             # auth.js, role.js, upload.js, adminLog.js
+│   ├── models/                 # Mongoose schemas (User, Resume, Job, Application, Course, AdminLog)
+│   ├── routes/                 # Express route definitions
+│   ├── services/               # Internal integrations (mlClient.js)
+│   ├── uploads/                # Stored resume documents
+│   ├── utils/                  # Automated test suites and seed scripts
+│   │   ├── seedAdmin.js        # Admin seeder
+│   │   ├── seedDemoUsers.js    # Demo user & job seeder
+│   │   ├── seedStudentData.js  # Multi-domain jobs and courses seeder
+│   │   ├── testAuth.js         # Authentication & RBAC test suite
+│   │   ├── testPhase3.js       # Student profile & resume test suite
+│   │   ├── testPhase4.js       # ATS scoring & parsing test suite
+│   │   ├── testMultiDomainBackend.js # Multi-domain extraction suite
+│   │   ├── testPhase5.js       # Job matching & skill gap suite
+│   │   ├── testPhase6.js       # Recruiter module test suite
+│   │   ├── testPhase7.js       # Admin module test suite
+│   │   └── testE2E.js          # Full end-to-end regression suite
+│   ├── .env.example
+│   ├── server.js
+│   └── package.json
+│
+└── ml-service/                 # Python FastAPI Microservice
     ├── app/
-    │   ├── models/      # Pydantic request/response schemas
-    │   ├── routes/      # FastAPI endpoint routers
-    │   ├── services/    # Text extraction, NLP, ATS scoring logic
-    │   ├── utils/       # Skill vocabulary taxonomy
+    │   ├── models/             # Pydantic validation schemas
+    │   ├── routes/             # FastAPI endpoints (resume.py, matching.py)
+    │   ├── services/           # extractor.py, nlp_parser.py, ats_scorer.py
+    │   ├── utils/              # domain_taxonomy.py, skill_patterns.py
     │   └── main.py
-    └── requirements.txt
+    ├── tests/
+    │   └── test_multi_domain.py# Python multi-domain taxonomy test suite
+    ├── requirements.txt
+    └── .env.example
 ```
 
-### Phase 1 Verification Results
-- Backend health check (`GET http://localhost:5000/api/health`) verified with status `200 OK` and active MongoDB connection.
-- Python ML Service health check (`GET http://localhost:8000/health`) verified with status `200 OK` (`status: healthy`).
+---
+
+## 🚀 5. Summary of Implemented Modules (Phases 1–8)
+
+### Phase 1 — Project Foundation
+- Initialized 3-tier microservice architecture.
+- Health check endpoints (`/api/health` and `/health`).
+- Established MongoDB Mongoose connection and static file streaming.
+
+### Phase 2 — Authentication, JWT & RBAC
+- Student, Recruiter, and Admin role support.
+- Secure bcrypt password hashing (10 salt rounds).
+- Stateless JWT issuance with expiration and bearer token authentication.
+- Password reset token generation with cryptographic hash validation.
+
+### Phase 3 — Student Module & File Management
+- Multer file upload pipeline with MIME-type validation (`.pdf`, `.docx`).
+- Primary resume flag management.
+- Student profile customization and bio updates.
+- Bookmarking jobs and tracking submitted applications.
+
+### Phase 4 — Multi-Domain Parsing & Explainable ATS Scoring
+- Text extraction from binary documents (`pdfplumber`, `python-docx`).
+- Section identification (Education, Experience, Skills, Certifications, Projects).
+- 10-domain skill extraction engine.
+- 4-component ATS scoring formula (Skills 40%, Formatting 20%, Experience 25%, Readability 15%).
+
+### Phase 5 — AI Job Matching, Skill Gap Analysis & Courses
+- Jaccard and weighted skill overlap algorithm:
+  $$\text{Match Percentage} = \frac{|\text{Resume Skills} \cap \text{Job Skills}|}{|\text{Job Required Skills}|} \times 100$$
+- Skill gap prioritization categorizing missing skills into Critical and Recommended.
+- Targeted course recommendations linked to active candidate skill gaps.
+
+### Phase 6 — Recruiter Module & Candidate Pipeline
+- Recruiter portal with live KPI metrics (Active Listings, Total Applicants, Shortlisted, Hired).
+- Job Posting CRUD with ownership authorization enforcement (`postedBy`).
+- Candidate review drawer displaying applicant resume, match score, and missing competencies.
+- Application stage progression: `Applied` ➔ `Under Review` ➔ `Shortlisted` ➔ `Interview Scheduled` ➔ `Selected/Hired` / `Rejected`.
+- Automatic applicant notification creation upon status transition.
+
+### Phase 7 — Platform Administration & Governance
+- Protected Admin Dashboard powered by live MongoDB aggregation pipelines.
+- User management: List, search, role filtering, and user activation/deactivation.
+- Self-lockout prevention ensuring admins cannot deactivate their own accounts.
+- Job moderation: Global visibility and soft/hard deletion of inappropriate postings.
+- System audit logging: Automatic recording of administrative actions (`AdminLog`).
+
+### Phase 8 — UI Polish, Demo Credentials & Quality Assurance
+- Polished responsive layouts, error feedback banners, and empty state cards.
+- Quick demo login chips on the Login page for one-click evaluation.
+- Quick-access portal launching from the public landing page.
+- Comprehensive end-to-end regression test suite (`testE2E.js`).
 
 ---
 
-## 🔐 4. PHASE 2 — Authentication + JWT + RBAC
-
-Phase 2 implemented full authentication mechanisms, JWT token lifecycle management, password hashing, password recovery flows, and Role-Based Access Control (RBAC).
-
-### Key Components Implemented
-- **User Model (`User.model.js`)**: Mongoose schema storing `fullName`, `email` (unique, lowercase), `password` (hashed), `role` (`student`, `recruiter`, `admin`), `resetPasswordToken`, `resetPasswordExpire`, and `createdAt` timestamps.
-- **Roles & Permissions**:
-  - `student`: Access to personal profile, resume uploads, ATS analysis, job browsing, saved jobs, applications, courses, and notifications.
-  - `recruiter`: Employer access for posting job openings and managing candidate applications.
-  - `admin`: Administrative governance and system monitoring.
-- **Registration (`POST /api/auth/register`)**: Validates full name, email uniqueness, role assignment, and password matching.
-- **Login (`POST /api/auth/login`)**: Verifies credentials, compares hashed passwords using `bcryptjs`, and returns signed JWT tokens.
-- **JWT Authentication**: Secure Bearer tokens issued with a 7-day expiration (`JWT_EXPIRES_IN=7d`).
-- **Password Hashing**: Automatic pre-save hashing using `bcryptjs` with 10 salt rounds.
-- **Protected Routes (`protect` middleware)**: Intercepts incoming requests, validates `Authorization: Bearer <token>` header, decodes user payload, and attaches user to `req.user`.
-- **Role-Based Authorization (`authorize` middleware)**: Higher-order middleware restricting routes to specified user roles (e.g. `authorize('student')`).
-- **Forgot Password (`POST /api/auth/forgot-password`)**: Generates an unhashed reset token, saves crypto-hashed token to database with a 10-minute expiry, and returns token for recovery.
-- **Reset Password (`POST /api/auth/reset-password`)**: Validates token against database hash, checks expiration, updates user password, and returns fresh auth token.
-
-### Authentication API Summary
-- `POST /api/auth/register` — User registration (Student / Recruiter).
-- `POST /api/auth/login` — Authenticate user & receive JWT token.
-- `GET /api/auth/me` — Retrieve current authenticated user session.
-- `POST /api/auth/forgot-password` — Request password reset token.
-- `POST /api/auth/reset-password` — Reset password using token.
-- `GET /api/test/student-only` — RBAC test route for student role.
-- `GET /api/test/recruiter-only` — RBAC test route for recruiter role.
-- `GET /api/test/admin-only` — RBAC test route for admin role.
-
-### Automated Test Results
-- **Suite Command**: `node utils/testAuth.js` (from `backend` directory)
-- **Result**: **18/18 tests passed** (100% pass rate).
-
----
-
-## 🎓 5. PHASE 3 — Student Module
-
-Phase 3 delivered the complete Student experience including profiles, resume management, job search, saved jobs, application workflows, recommended learning pathways, and notification feeds.
-
-### Implemented Student Module Features
-- **Student Dashboard (`StudentDashboardPage.jsx`)**: Comprehensive metrics dashboard displaying uploaded resume stats, total applications submitted, saved jobs count, recommended courses, and quick-action links.
-- **Student Profile (`StudentProfilePage.jsx`)**: Form to view and update student profile details including institution/college, degree, branch, graduation year, bio, technical skills array, and target career role.
-- **Resume Management (`ResumeUploadPage.jsx`)**: Multipart file upload supporting PDF (`.pdf`) and Word (`.docx`) up to 5MB, resume listing, primary resume selection, and secure deletion.
-- **Job Browsing & Application Management**:
-  - Browse available jobs (`GET /api/jobs`).
-  - Save/Unsave job openings (`POST /api/jobs/:id/save`, `DELETE /api/jobs/:id/save`).
-  - View saved jobs list (`GET /api/jobs/saved`).
-  - Submit applications with optional cover notes (`POST /api/applications`).
-  - View submitted job applications status (`GET /api/applications`).
-- **Recommended Courses (`RecommendedCoursesPage.jsx`)**: Suggested online courses tailored to candidate skill profile (`GET /api/courses/recommended`).
-- **Notifications Feed (`NotificationsPage.jsx`)**: System alert feed for application updates and status notifications (`GET /api/notifications`).
-- **Protected Student Functionality**: Middleware guards (`protect` + `authorize('student')`) enforce strict isolation so non-students and cross-account users cannot access student records (returns `401 Unauthorized` or `403 Forbidden`).
-
-### Frontend Student Pages
-- `StudentDashboardPage.jsx` — Student overview dashboard.
-- `StudentProfilePage.jsx` — Profile management page.
-- `ResumeUploadPage.jsx` — Resume manager & upload page.
-- `ApplicationsPage.jsx` — Applied jobs tracking page.
-- `SavedJobsPage.jsx` — Bookmarked jobs page.
-- `JobMatchingPage.jsx` — Job matches & opportunities page.
-- `SkillGapsPage.jsx` — Skill gaps visualization page.
-- `RecommendedCoursesPage.jsx` — Course recommendations page.
-- `NotificationsPage.jsx` — System notifications center.
-- `StudentSettingsPage.jsx` — Student account settings.
-
-### Database Models Implemented
-- `User.model.js` — Stores user account and authentication data.
-- `Resume.model.js` — Stores uploaded resume file details, raw text, parsed section data, detected skills, and ATS score metrics.
-- `Job.model.js` — Job vacancy postings.
-- `Application.model.js` — Job applications mapping students to jobs.
-- `SavedJob.model.js` — Student job bookmarks.
-- `Course.model.js` — Recommended learning courses catalog.
-- `Notification.model.js` — User notifications and alerts.
-
-### Automated Test & Regression Results
-- **Suite Command**: `node utils/testPhase3.js` (from `backend` directory)
-- **Result**: **19/19 tests passed** (100% pass rate).
-- **Regression Status**: 0 regressions detected across Phase 1 health endpoints and Phase 2 authentication APIs.
-
----
-
-## 🧠 6. PHASE 4 — Resume Parsing + ATS + AI/ML Architecture
-
-### 1. Resume Text Extraction Engine
-- **PDF Extraction**: `pypdf` extracts plain text page by page with UTF-8 fallback.
-- **DOCX Extraction**: `python-docx` extracts paragraphs, headers, and structured tables.
-- **Supported Formats**: PDF (`.pdf`) and Word (`.docx`).
-- **Resilience**: Robust fallback handling for corrupted, empty, or unformatted text streams.
-
-### 2. NLP Text Preprocessing & Section Detection
-- **Preprocessing**: Whitespace cleanup, unicode normalization, line break cleaning, duplicate space removal while preserving document structure.
-- **Section Parsing**: Rule-based NLP section identifier extracting:
-  - `contact`: Full name, email, phone, LinkedIn, GitHub.
-  - `summary`: Professional summary / objective overview.
-  - `skills`: Detected technical competencies.
-  - `education`: Institutions, degree programs, field of study.
-  - `experience`: Work history, company names, role descriptions.
-  - `projects`: Technical projects and technologies used.
-  - `certifications`: Industry certifications and credentials.
-  - `achievements`: Awards and accomplishments.
-
-### 3. Skill Extraction Vocabulary
-Extensible tech vocabulary taxonomy matching 30+ core technical skills using word boundary regex matching:
-`Python`, `Java`, `JavaScript`, `TypeScript`, `React`, `Node.js`, `Express`, `MongoDB`, `SQL`, `MySQL`, `PostgreSQL`, `C`, `C++`, `Machine Learning`, `Deep Learning`, `Data Science`, `Data Analytics`, `Pandas`, `NumPy`, `Scikit-learn`, `TensorFlow`, `PyTorch`, `Docker`, `Git`, `GitHub`, `AWS`, `Azure`, `HTML`, `CSS`, `REST API`, `FastAPI`, `GraphQL`, `Kubernetes`, `Linux`.
-
-### 4. Rule-Based ATS Scoring Methodology
-Transparent, explainable ATS scoring algorithm returning:
-- `overallScore`: Weighted summary of section completeness (30%), skills count (25%), keyword relevance (15%), work experience (15%), education (10%), and projects (5%).
-- `keywordScore`: Terminology and word density score (0 - 100).
-- `skillsScore`: Score based on count of verified technical skills (0 - 100).
-- `sectionCompletenessScore`: Essential header presence score (0 - 100).
-- `educationScore` & `experienceScore` & `projectScore`: Category match scores.
-- `missingCommonSkills`: Identifies core foundational skills not detected in candidate text.
-- `recommendations`: Actionable advice for resume improvement.
-
-### 5. ATS Frontend Integration
-- `ResumeAnalysisPage.jsx` & `AtsScorePage.jsx`: Interactive visual dashboard rendering overall ATS score gauge, detailed category breakdown, detected skills tags, missing foundational skills warnings, and actionable resume improvement recommendations. Automates user profile skills updating upon successful analysis.
-
----
-
-## 📡 ML Microservice API Endpoints (`http://localhost:8000`)
-
-- `GET /health` — Microservice health status.
-- `POST /api/ml/analyze-resume` — Executes full extraction, section parsing, skill detection, and ATS scoring.
-- `POST /api/ml/extract-skills` — Standalone skill extraction endpoint.
-- `POST /api/ml/ats-score` — Standalone ATS scoring endpoint.
-
----
-
-## 📡 Backend Resume Analysis APIs (`http://localhost:5000`)
-
-- `POST /api/resumes/:id/analyze` — Initiates ML pipeline for authenticated resume owner.
-- `GET /api/resumes/:id/analysis` — Retrieves stored analysis & ATS score breakdown.
-
----
-
-## 🧪 Phase 4 Test Results
-- **Suite Command**: `node utils/testPhase4.js` (from `backend` directory)
-- **Result**: **8/8 tests passed** (100% pass rate).
-
----
-
-## 📊 7. CURRENT IMPLEMENTATION STATUS
-
-Phase 1 — COMPLETE  
-Phase 2 — COMPLETE  
-Phase 3 — COMPLETE  
-Phase 4 — COMPLETE  
-Phase 5 — NOT STARTED  
-Phase 6 — NOT STARTED  
-Phase 7 — NOT STARTED  
-Phase 8 — NOT STARTED  
-Final — PENDING  
-
----
-
-## 🚀 8. SERVICE STATUS MATRIX
-
-| Service | Technology | Port / URL | Health Route | Status |
-|---|---|---|---|---|
-| **Frontend** | React + Vite | `http://localhost:5173` | `/` | Operational |
-| **Backend** | Express + Node.js | `http://localhost:5000` | `/api/health` | Operational |
-| **ML Service** | FastAPI + Python | `http://localhost:8000` | `/health` | Operational |
-| **Database** | MongoDB | `mongodb://127.0.0.1:27017/skillsync` | Mongoose | Connected |
-
----
-
-## 🧪 9. TESTING & REGRESSION STATUS
-
-SkillSync includes automated integration test suites for verifying backend routes, authentication mechanisms, student features, microservice IPC, and ML pipeline scoring.
-
-| Phase | Test Suite | Command | Total Tests | Passed | Failed | Status |
-|---|---|---|---|---|---|---|
-| **Phase 1** | System Health Checks | Service startup ping | 3 | 3 | 0 | 100% PASS |
-| **Phase 2** | Auth & RBAC Suite | `node utils/testAuth.js` | 18 | 18 | 0 | 100% PASS |
-| **Phase 3** | Student Module Suite | `node utils/testPhase3.js` | 19 | 19 | 0 | 100% PASS |
-| **Phase 4** | Resume & ATS ML Suite | `node utils/testPhase4.js` | 8 | 8 | 0 | 100% PASS |
-| **TOTAL** | **Full Integration** | All suites combined | **48** | **48** | **0** | **100% PASS** |
-
-- **Regression Status**: Zero regressions across all operational tiers. All endpoints retain backward compatibility across completed phases.
-
----
-
-## 💻 10. HOW TO RUN THE PROJECT
+## ⚙️ 6. Prerequisites & Environment Configuration
 
 ### Prerequisites
-1. **Node.js** (v18+ recommended) & `npm` installed.
-2. **Python** (v3.10+ recommended) & `pip` installed.
-3. **MongoDB** running locally at `mongodb://127.0.0.1:27017/skillsync`.
+- **Node.js**: v18.0.0 or higher
+- **Python**: v3.10.0 or higher
+- **MongoDB**: Community Server v6.0+ running locally on port `27017`
+- **npm**: v9.0.0 or higher
 
----
+### Environment Setup
 
-### Step 1: Start MongoDB
-Ensure MongoDB daemon is active on default port `27017`:
-```bash
-mongod
+#### Backend Configuration (`backend/.env`)
+Create `backend/.env` with the following variables:
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb://localhost:27017/skillsync
+JWT_SECRET=skillsync_jwt_super_secret_key_change_in_production_2026
+JWT_EXPIRES_IN=7d
+ML_SERVICE_URL=http://localhost:8000
+CLIENT_URL=http://localhost:5173
+```
+
+#### ML Service Configuration (`ml-service/.env`)
+Create `ml-service/.env`:
+```env
+PORT=8000
+HOST=0.0.0.0
+DEBUG=True
+ENVIRONMENT=development
+```
+
+#### Frontend Configuration (`frontend/.env`)
+Create `frontend/.env`:
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
 
-### Step 2: Start Node.js Backend Server
-From the project root:
+## 🏃 7. Installation & Getting Started
+
+### 1. Start MongoDB
+Ensure your local MongoDB daemon is running:
+```bash
+# Windows PowerShell / Services
+net start MongoDB
+# Or via mongod binary:
+mongod --dbpath <path_to_db_folder>
+```
+
+### 2. Setup & Start ML Service
+```bash
+cd ml-service
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+*Health verification: `http://localhost:8000/health`*
+
+### 3. Setup & Start Backend Server
 ```bash
 cd backend
 npm install
+
+# Seed Admin and Demo Accounts
+node utils/seedDemoUsers.js
+# Seed Multi-Domain Jobs and Courses
+node utils/seedStudentData.js
+
+# Start API server
 npm run dev
 ```
-*Backend runs on `http://localhost:5000`.*
+*Health verification: `http://localhost:5000/api/health`*
 
----
-
-### Step 3: Start Python ML Microservice
-From the project root in a new terminal:
-```bash
-cd ml-service
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
-*ML Microservice runs on `http://localhost:8000`.*
-
----
-
-### Step 4: Start React Frontend Application
-From the project root in a new terminal:
+### 4. Setup & Start Frontend Application
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Frontend runs on `http://localhost:5173`.*
+*Application available at: `http://localhost:5173`*
 
 ---
 
-### Running Automated Test Suites
-To run all automated test suites, execute the following from the `backend/` directory:
+## 🎭 8. Demo Walkthrough & Pre-seeded Accounts
 
+For rapid evaluation, the login page (`http://localhost:5173/login`) provides **quick-fill credential chips**:
+
+| Role | Email | Password | Pre-populated Data |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@skillsync.com` | `Admin@123456` | Platform-wide stats, user table, job moderation, audit log |
+| **Recruiter** | `recruiter.demo@skillsync.com` | `Password123!` | 3 Active Jobs across domains, applicant applications |
+| **Student** | `student.demo@skillsync.com` | `Password123!` | Analyzed resume (88 ATS score), matched jobs, skill gaps |
+
+### Demo Evaluation Journeys
+
+1. **Student Journey**:
+   - Log in as `student.demo@skillsync.com`.
+   - Visit **My Resumes** to see the analyzed resume, detected skills, and ATS score of 88.
+   - Navigate to **Job Matching** to observe match percentages, matched skills, and missing competencies.
+   - Click **Skill Gap Analysis** to view prioritized learning paths and tailored course recommendations.
+   - Apply for an open position and review the application in **My Applications**.
+
+2. **Recruiter Journey**:
+   - Log in as `recruiter.demo@skillsync.com`.
+   - Access **Recruiter Dashboard** to see live metrics and active postings.
+   - Click **Post New Job** to publish a new requisition with domain categorization.
+   - View applicants, inspect candidate match percentages, and advance an applicant from `Shortlisted` to `Interview Scheduled`.
+
+3. **Admin Journey**:
+   - Log in as `admin@skillsync.com`.
+   - Inspect the **Admin Dashboard** metrics aggregated directly from MongoDB.
+   - Go to **User Management** to search, filter by role, or toggle user status.
+   - Access **Job Moderation** to review or remove postings.
+   - Check **Audit Logs** to view timestamped administrative actions.
+
+---
+
+## 📡 9. Complete API Catalog
+
+### Public & Authentication
+- `POST /api/auth/register` — Register student or recruiter account.
+- `POST /api/auth/login` — Authenticate and receive JWT token.
+- `GET /api/auth/me` — Retrieve authenticated user profile.
+- `POST /api/auth/forgot-password` — Request password reset email.
+- `POST /api/auth/reset-password` — Apply new password via reset token.
+
+### Student Portal
+- `GET /api/profile` / `PUT /api/profile` — View or update student profile.
+- `POST /api/resumes/upload` — Upload PDF/DOCX resume.
+- `GET /api/resumes` — List all uploaded resumes.
+- `GET /api/resumes/:id` — Get single resume details.
+- `DELETE /api/resumes/:id` — Delete uploaded resume.
+- `PUT /api/resumes/:id/primary` — Designate resume as primary.
+- `POST /api/resumes/:id/analyze` — Trigger ML parsing and ATS scoring.
+- `GET /api/resumes/:id/analysis` — Fetch stored ATS report and breakdown.
+- `GET /api/jobs` — Browse active jobs with domain filters.
+- `GET /api/jobs/matched` — Retrieve AI-ranked job recommendations.
+- `POST /api/jobs/:id/save` / `DELETE /api/jobs/:id/save` — Bookmark or unbookmark a job.
+- `POST /api/applications` — Submit job application.
+- `GET /api/applications` — List student applications.
+- `GET /api/courses/recommended` — Fetch personalized course recommendations.
+
+### Recruiter Portal
+- `GET /api/recruiter/dashboard` — Recruiter statistics and metrics.
+- `GET /api/recruiter/jobs` — Retrieve jobs posted by authenticated recruiter.
+- `POST /api/recruiter/jobs` — Create new job listing.
+- `PUT /api/recruiter/jobs/:id` — Update job listing (owner only).
+- `DELETE /api/recruiter/jobs/:id` — Delete job listing (owner only).
+- `GET /api/recruiter/applications` — List applications for recruiter's jobs.
+- `PUT /api/recruiter/applications/:id/status` — Advance candidate stage.
+
+### Admin Portal
+- `GET /api/admin/dashboard` — System-wide analytics and distribution.
+- `GET /api/admin/users` — Paginated user directory with role filters.
+- `PUT /api/admin/users/:id/status` — Toggle user active/inactive status.
+- `GET /api/admin/jobs` — Global job directory across all recruiters.
+- `DELETE /api/admin/jobs/:id` — Administrative removal of a job listing.
+- `GET /api/admin/applications` — Comprehensive platform application tracking.
+- `GET /api/admin/logs` — Immutable administrative audit log.
+
+### ML Microservice (`http://localhost:8000`)
+- `GET /health` — Service health and uptime.
+- `POST /api/ml/analyze-resume` — Text extraction, multi-domain classification, ATS scoring.
+- `POST /api/ml/extract-skills` — Standalone regex-based skill extraction.
+- `POST /api/ml/ats-score` — Standalone 4-pillar ATS score evaluation.
+- `POST /api/ml/match-job` — Standalone candidate-job match evaluation.
+
+---
+
+## 🧪 10. Automated Test Suites & Quality Assurance
+
+SkillSync includes a multi-layered automated test suite verifying security, ML models, API contracts, and user workflows.
+
+### Running Backend & E2E Suites
+Execute from `backend/`:
 ```bash
-# Phase 2 Authentication & RBAC Suite (18 tests)
+# 1. Phase 2: Authentication & RBAC Suite (18 tests)
 node utils/testAuth.js
 
-# Phase 3 Student Module Suite (19 tests)
+# 2. Phase 3: Student Module Suite (19 tests)
 node utils/testPhase3.js
 
-# Phase 4 Resume Parsing & ATS AI/ML Suite (8 tests)
+# 3. Phase 4: ATS Scoring & ML Integration Suite (8 tests)
 node utils/testPhase4.js
+
+# 4. Multi-Domain Skill Extraction Backend Suite (8 tests)
+node utils/testMultiDomainBackend.js
+
+# 5. Phase 5: Job Matching & Skill Gap Suite (16 tests)
+node utils/testPhase5.js
+
+# 6. Phase 6: Recruiter Module Suite (20 tests)
+node utils/testPhase6.js
+
+# 7. Phase 7: Admin Module & RBAC Suite (20 tests)
+node utils/testPhase7.js
+
+# 8. Phase 8: Comprehensive End-to-End Regression Suite (23 tests)
+node utils/testE2E.js
+```
+
+### Running ML Microservice Python Suite
+Execute from `ml-service/`:
+```bash
+pytest tests/test_multi_domain.py -v
+```
+
+### Running Frontend Production Build
+Execute from `frontend/`:
+```bash
+npm run build
 ```
 
 ---
 
-## 📡 11. API OVERVIEW
+## ⚠️ 11. Known Limitations
 
-All currently implemented APIs are listed below grouped by development phase:
-
-### System & Health APIs (Phase 1)
-- `GET /` — API server welcome & status check.
-- `GET /api/health` — Backend API and MongoDB database health check.
-- `GET http://localhost:8000/health` — ML Service health status.
-
-### Authentication & Authorization APIs (Phase 2)
-- `POST /api/auth/register` — Register new Student or Recruiter account.
-- `POST /api/auth/login` — Login user & return JWT token.
-- `GET /api/auth/me` — Get current user session (Protected).
-- `POST /api/auth/forgot-password` — Generate password reset token.
-- `POST /api/auth/reset-password` — Reset password using token.
-- `GET /api/test/student-only` — Test route restricted to Student role.
-- `GET /api/test/recruiter-only` — Test route restricted to Recruiter role.
-- `GET /api/test/admin-only` — Test route restricted to Admin role.
-
-### Student Module APIs (Phase 3)
-- `GET /api/profile` — Fetch student profile details.
-- `PUT /api/profile` — Update student profile details & skills.
-- `POST /api/resumes/upload` — Upload resume (PDF or DOCX file).
-- `GET /api/resumes` — List uploaded resumes for authenticated student.
-- `GET /api/resumes/:id` — Retrieve single resume details.
-- `DELETE /api/resumes/:id` — Delete uploaded resume.
-- `PUT /api/resumes/:id/primary` — Mark resume as primary.
-- `GET /api/jobs` — Browse job postings list.
-- `POST /api/jobs/:id/save` — Save job to student bookmarks.
-- `DELETE /api/jobs/:id/save` — Remove job from student bookmarks.
-- `GET /api/jobs/saved` — List saved jobs for authenticated student.
-- `POST /api/applications` — Submit job application.
-- `GET /api/applications` — List submitted job applications.
-- `GET /api/courses/recommended` — Retrieve recommended learning courses.
-- `GET /api/notifications` — Retrieve student notifications.
-
-### Resume Parsing, ATS & ML APIs (Phase 4)
-- `POST http://localhost:8000/api/ml/analyze-resume` — ML endpoint for text extraction, section detection, skill extraction, and ATS scoring.
-- `POST http://localhost:8000/api/ml/extract-skills` — ML endpoint for standalone skill extraction.
-- `POST http://localhost:8000/api/ml/ats-score` — ML endpoint for standalone ATS score calculation.
-- `POST /api/resumes/:id/analyze` — Backend route triggering ML analysis on uploaded resume.
-- `GET /api/resumes/:id/analysis` — Backend route retrieving stored ML analysis & ATS breakdown.
+1. **Email Delivery**: The password reset and interview notification workflows log security tokens and alert records to the server database/console; an external SMTP provider (e.g., SendGrid, AWS SES) should be configured for live external emailing.
+2. **Document OCR**: Resume text extraction is optimized for text-based PDF and DOCX documents. Scanned resumes consisting solely of flat raster images require an additional OCR engine (e.g., Tesseract).
+3. **ML Scale**: The current skill matching engine utilizes deterministic tokenized regex matching and Jaccard similarity. For multi-million resume workloads, vector embeddings (e.g., pgvector, Pinecone, or FAISS) can be integrated.
 
 ---
 
-## 🔮 12. FUTURE PHASES
-
-The following phases are planned for upcoming development iterations:
-
-- **Phase 5 — Recruiter Module & Job Posting Management** *(NOT STARTED)*: Recruiter dashboard, posting job openings, candidate application management, resume review workflow.
-- **Phase 6 — AI Skill Gap Analysis & Smart Course Recommendations Engine** *(NOT STARTED)*: Automated skill gap analysis comparing candidate profile skills against targeted job requirements, course matching algorithms.
-- **Phase 7 — Automated Candidate Ranking & AI Match Score Engine** *(NOT STARTED)*: Automated candidate ranking for job listings, semantic match score calculation, recruiter filtering & sorting engine.
-- **Phase 8 — Advanced Analytics, Platform Administration & Deployment** *(NOT STARTED)*: Platform metrics dashboard, recruiter analytics, candidate analytics, production deployment configuration.
+## 📄 License
+This project is proprietary and developed as part of the SkillSync Career Platform.

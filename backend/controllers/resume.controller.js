@@ -214,6 +214,9 @@ exports.analyzeResume = async (req, res) => {
       resume.detectedSkills = mlResponse.detectedSkills || [];
       resume.atsScore = mlResponse.atsScore || 0;
       resume.atsBreakdown = mlResponse.atsBreakdown || {};
+      resume.detectedDomain = mlResponse.detectedDomain || 'Unknown';
+      resume.relevantDomains = mlResponse.relevantDomains || [];
+      resume.domainConfidence = mlResponse.domainConfidence || 0;
       resume.status = 'analyzed';
       resume.analysisStatus = 'analyzed';
       resume.analyzedAt = new Date();
@@ -284,6 +287,9 @@ exports.getResumeAnalysis = async (req, res) => {
       detectedSkills: resume.detectedSkills,
       atsScore: resume.atsScore,
       atsBreakdown: resume.atsBreakdown,
+      detectedDomain: resume.detectedDomain || 'Unknown',
+      relevantDomains: resume.relevantDomains || [],
+      domainConfidence: resume.domainConfidence || 0,
       analyzedAt: resume.analyzedAt,
       analysisError: resume.analysisError,
       resume

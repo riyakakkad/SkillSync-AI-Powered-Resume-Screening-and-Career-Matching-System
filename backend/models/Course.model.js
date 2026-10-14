@@ -33,6 +33,11 @@ const CourseSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    domain: {
+      type: String,
+      default: 'General',
+      trim: true
+    },
     progress: {
       type: Number,
       default: 0

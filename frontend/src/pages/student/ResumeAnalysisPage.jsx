@@ -136,8 +136,13 @@ export default function ResumeAnalysisPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ fontSize: '2rem' }}>📄</div>
           <div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff' }}>
-              {selectedResume?.originalName}
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+              <span>{selectedResume?.originalName}</span>
+              {(selectedResume?.detectedDomain || parsedData?.detectedDomain) && (
+                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', borderRadius: '6px', background: 'rgba(99, 102, 241, 0.25)', border: '1px solid rgba(99, 102, 241, 0.45)', color: '#a5b4fc', fontWeight: 600 }}>
+                  🏷️ {selectedResume?.detectedDomain || parsedData?.detectedDomain}
+                </span>
+              )}
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               Status: <span style={{ color: status === 'analyzed' ? '#34d399' : '#fbbf24', fontWeight: 600 }}>{status.toUpperCase()}</span>

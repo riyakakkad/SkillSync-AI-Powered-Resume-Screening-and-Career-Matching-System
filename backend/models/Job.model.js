@@ -37,9 +37,17 @@ const JobSchema = new mongoose.Schema(
     requiredSkills: [{
       type: String
     }],
+    preferredSkills: [{
+      type: String
+    }],
     experienceLevel: {
       type: String,
       default: 'Entry-level'
+    },
+    domain: {
+      type: String,
+      default: 'General',
+      trim: true
     },
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,

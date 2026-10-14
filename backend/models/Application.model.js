@@ -23,8 +23,10 @@ const ApplicationSchema = new mongoose.Schema(
         'Under Review',
         'Shortlisted',
         'Interview Scheduled',
+        'Interview',
         'Rejected',
-        'Selected'
+        'Selected',
+        'Hired'
       ],
       default: 'Applied'
     },
